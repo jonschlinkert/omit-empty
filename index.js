@@ -10,35 +10,13 @@
 var reduceObj = require('reduce-object');
 
 module.exports = function omitEmpty(o, noZero) {
-  var target = {};
-  var value;
-
-  for (var key in o) {
-    if (!o.hasOwnProperty(key) || isEmpty(o[key])) {
-      // leave as early as possible
-      continue;
-    }
-    value = o[key];
-
+  return reduceObj(o, function (acc, value, key) {
     if (isObject(value)) {
-      if (isEmpty(value)) {
-        continue;
+      var val = omitEmpty(value, noZero);
+      if (!isEmpty(val)) {
+        acc[key] = val;
       }
-      target[key] = omitEmpty(value, noZero);
-    } else if (Array.isArray(value)) {
-      if (isEmpty(value)) {
-        continue;
-      }
-      target[key] = value;
-    } else {
-      if (value === '' || (noZero && value === 0)) {
-        continue;
-      }
-      target[key] = value;
-    }
-  }
-  return reduceObj(target, function (acc, value, key) {
-    if (!isEmpty(value)) {
+    } else if (!isEmpty(value, noZero)) {
       acc[key] = value;
     }
     return acc;
@@ -49,11 +27,14 @@ function isObject(o) {
   return typeof o === 'object' && !Array.isArray(o);
 }
 
-function isEmpty(o) {
+function isEmpty(o, noZero) {
   if (typeof o === 'boolean') {
     return false;
   }
   if (typeof o === 'number') {
+    if (noZero && o === 0) {
+      return true;
+    }
     return false;
   }
   if (o === null || o === undefined) {
