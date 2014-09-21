@@ -51,5 +51,8 @@
     "utilities",
     "utility",
     "value"
-  ]
+  ],
+  "dependencies": {
+    "reduce-object": "^0.1.2"
+  }
 }

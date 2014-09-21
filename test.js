@@ -15,6 +15,14 @@ describe('.omitEmpty()', function () {
     omitEmpty({a: {b: {c: 'foo'}, d: {}}}).should.eql({a: {b: {c: 'foo'}}});
   });
 
+  it('should omit empty objects.', function () {
+    omitEmpty({a: undefined}).should.eql({});
+  });
+
+  it('should omit empty objects.', function () {
+    omitEmpty({a: {b: undefined}}).should.eql({});
+  });
+
   it('should omit empty primatives.', function () {
     omitEmpty({a: {b: {c: 'foo'}, d: ''}}).should.eql({a: {b: {c: 'foo'}}});
   });

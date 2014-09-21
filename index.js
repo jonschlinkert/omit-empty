@@ -7,12 +7,14 @@
 
 'use strict';
 
+var reduceObj = require('reduce-object');
+
 module.exports = function omitEmpty(o, noZero) {
   var target = {};
   var value;
 
   for (var key in o) {
-    if (!o.hasOwnProperty(key)) {
+    if (!o.hasOwnProperty(key) || isEmpty(o[key])) {
       // leave as early as possible
       continue;
     }
@@ -35,7 +37,12 @@ module.exports = function omitEmpty(o, noZero) {
       target[key] = value;
     }
   }
-  return target;
+  return reduceObj(target, function (acc, value, key) {
+    if (!isEmpty(value)) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
 };
 
 function isObject(o) {
@@ -43,7 +50,13 @@ function isObject(o) {
 }
 
 function isEmpty(o) {
-  if (o == null) {
+  if (typeof o === 'boolean') {
+    return false;
+  }
+  if (typeof o === 'number') {
+    return false;
+  }
+  if (o === null || o === undefined) {
     return true;
   }
   if (o.length !== undefined) {
@@ -56,3 +69,4 @@ function isEmpty(o) {
   }
   return true;
 }
+
