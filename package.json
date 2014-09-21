@@ -1,6 +1,6 @@
 {
   "name": "omit-empty",
-  "description": "Returns true if an object has any of the specified keys.",
+  "description": "Recursively omit empty properties from an object. Omits empty objects, arrays, strings or zero.",
   "version": "0.1.0",
   "homepage": "https://github.com/jonschlinkert/omit-empty",
   "author": {
@@ -30,7 +30,8 @@
   "devDependencies": {
     "mocha": "*",
     "should": "^4.0.4",
-    "verb": ">= 0.2.6"
+    "verb": ">= 0.2.6",
+    "verb-tag-jscomments": ">= 0.2.0"
   },
   "keywords": [
     "find",

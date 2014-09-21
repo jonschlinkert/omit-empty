@@ -7,7 +7,7 @@
 
 'use strict';
 
-module.exports = function omitEmpty(o, flatten) {
+module.exports = function omitEmpty(o, noZero) {
   var target = {};
   var value;
 
@@ -16,30 +16,23 @@ module.exports = function omitEmpty(o, flatten) {
       // leave as early as possible
       continue;
     }
-
     value = o[key];
 
     if (isObject(value)) {
       if (isEmpty(value)) {
         continue;
-      } else {
-        target[key] = omitEmpty(value);
       }
+      target[key] = omitEmpty(value, noZero);
     } else if (Array.isArray(value)) {
       if (isEmpty(value)) {
         continue;
-      } else if (flatten) {
-        target[key] = flatten(value).filter(Boolean);
-        console.log(value)
-      } else {
-        target[key] = value.filter(Boolean);
       }
+      target[key] = value;
     } else {
-      if (isEmpty(value)) {
+      if (value === '' || (noZero && value === 0)) {
         continue;
-      } else {
-        target[key] = value;
       }
+      target[key] = value;
     }
   }
   return target;
@@ -62,15 +55,4 @@ function isEmpty(o) {
     }
   }
   return true;
-}
-
-function flatten(arr) {
-  if (isEmpty(arr)) {
-    return [];
-  }
-
-  do {
-    arr = [].concat.apply([], arr);
-  } while(arr.some(Array.isArray));
-  return arr;
 }
