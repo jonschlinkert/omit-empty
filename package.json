@@ -1,0 +1,54 @@
+{
+  "name": "omit-empty",
+  "description": "Returns true if an object has any of the specified keys.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jonschlinkert/omit-empty",
+  "author": {
+    "name": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jonschlinkert/omit-empty.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/omit-empty/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jonschlinkert/omit-empty/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "^4.0.4",
+    "verb": ">= 0.2.6"
+  },
+  "keywords": [
+    "find",
+    "has",
+    "hasOwn",
+    "javascript",
+    "js",
+    "key",
+    "keys",
+    "omit",
+    "empty",
+    "node.js",
+    "object",
+    "properties",
+    "property",
+    "util",
+    "utilities",
+    "utility",
+    "value"
+  ]
+}
