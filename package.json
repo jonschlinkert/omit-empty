@@ -1,7 +1,7 @@
 {
   "name": "omit-empty",
   "description": "Recursively omit empty properties from an object. Omits empty objects, arrays, strings or zero.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "homepage": "https://github.com/jonschlinkert/omit-empty",
   "author": {
     "name": "Jon Schlinkert",
@@ -34,25 +34,31 @@
     "verb-tag-jscomments": ">= 0.2.0"
   },
   "keywords": [
+    "clear",
+    "delete",
+    "empty",
     "find",
     "has",
-    "hasOwn",
+    "hasown",
     "javascript",
     "js",
     "key",
     "keys",
-    "omit",
-    "empty",
-    "node.js",
+    "node",
+    "node-js",
     "object",
+    "omit",
     "properties",
     "property",
+    "remove",
     "util",
     "utilities",
     "utility",
     "value"
   ],
   "dependencies": {
+    "has-value": "^0.1.0",
+    "isobject": "^0.2.0",
     "reduce-object": "^0.1.2"
   }
 }

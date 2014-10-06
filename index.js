@@ -7,47 +7,20 @@
 
 'use strict';
 
-var reduceObj = require('reduce-object');
+var reduce = require('reduce-object');
+var hasValue = require('has-value');
+var isObject = require('isobject');
 
 module.exports = function omitEmpty(o, noZero) {
-  return reduceObj(o, function (acc, value, key) {
+  return reduce(o, function (acc, value, key) {
     if (isObject(value)) {
       var val = omitEmpty(value, noZero);
-      if (!isEmpty(val)) {
+      if (hasValue(val)) {
         acc[key] = val;
       }
-    } else if (!isEmpty(value, noZero)) {
+    } else if (hasValue(value, noZero)) {
       acc[key] = value;
     }
     return acc;
   }, {});
 };
-
-function isObject(o) {
-  return typeof o === 'object' && !Array.isArray(o);
-}
-
-function isEmpty(o, noZero) {
-  if (typeof o === 'boolean') {
-    return false;
-  }
-  if (typeof o === 'number') {
-    if (noZero && o === 0) {
-      return true;
-    }
-    return false;
-  }
-  if (o === null || o === undefined) {
-    return true;
-  }
-  if (o.length !== undefined) {
-    return o.length === 0;
-  }
-  for (var key in o) {
-    if (o.hasOwnProperty(key)) {
-      return false;
-    }
-  }
-  return true;
-}
-
