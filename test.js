@@ -1,12 +1,13 @@
 /*!
  * omit-empty <https://github.com/jonschlinkert/omit-empty>
  *
- * Copyright (c) 2014 Jon Schlinkert, contributors.
- * Licensed under the MIT License
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
  */
 
 'use strict';
 
+/* deps:mocha */
 var should = require('should');
 var omitEmpty = require('./');
 
