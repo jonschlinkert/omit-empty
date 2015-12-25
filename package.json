@@ -3,21 +3,12 @@
   "description": "Recursively omit empty properties from an object. Omits empty objects, arrays, strings or zero.",
   "version": "0.3.1",
   "homepage": "https://github.com/jonschlinkert/omit-empty",
-  "author": {
-    "name": "Jon Schlinkert",
-    "url": "https://github.com/jonschlinkert"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jonschlinkert/omit-empty.git"
-  },
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/omit-empty",
   "bugs": {
     "url": "https://github.com/jonschlinkert/omit-empty/issues"
   },
-  "license": {
-    "type": "MIT",
-    "url": "https://github.com/jonschlinkert/omit-empty/blob/master/LICENSE"
-  },
+  "license": "MIT",
   "files": [
     "index.js"
   ],
@@ -35,7 +26,7 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "^5.2.0"
+    "should": "*"
   },
   "keywords": [
     "clear",
@@ -59,5 +50,30 @@
     "utilities",
     "utility",
     "value"
-  ]
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "arrayify-compact",
+        "compact-object",
+        "delete",
+        "flatten-object",
+        "for-in",
+        "for-own",
+        "has-any",
+        "has-value",
+        "is-number",
+        "is-plain-object",
+        "mixin-deep",
+        "mixin-object",
+        "object-length",
+        "omit-empty",
+        "reduce-object"
+      ]
+    },
+    "layout": "default",
+    "plugins": [
+      "gulp-format-md"
+    ]
+  }
 }
