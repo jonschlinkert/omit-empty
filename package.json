@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "has-values": "^0.1.3",
+    "is-date-object": "^1.0.1",
     "isobject": "^2.0.0",
     "reduce-object": "^0.1.3"
   },
