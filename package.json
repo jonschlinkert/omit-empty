@@ -26,8 +26,9 @@
     "reduce-object": "^0.1.3"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*"
+    "gulp-format-md": "^0.1.7",
+    "mocha": "^2.4.5",
+    "should": "^8.2.2"
   },
   "keywords": [
     "clear",
@@ -53,17 +54,20 @@
     "value"
   ],
   "verb": {
+    "run": true,
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
     "related": {
       "list": [
-        "arrayify-compact",
-        "compact-object",
-        "delete",
         "flatten-object",
         "for-in",
         "for-own",
-        "has-any",
-        "has-value",
-        "is-number",
         "is-plain-object",
         "mixin-deep",
         "mixin-object",
@@ -72,9 +76,11 @@
         "reduce-object"
       ]
     },
-    "layout": "default",
-    "plugins": [
-      "gulp-format-md"
-    ]
+    "reflinks": [
+      "verb"
+    ],
+    "lint": {
+      "reflinks": true
+    }
   }
 }
