@@ -7,51 +7,61 @@
 
 'use strict';
 
-/* deps:mocha */
-var should = require('should');
+require('mocha');
+var assert = require('assert');
 var omitEmpty = require('./');
 
 describe('.omitEmpty()', function() {
   it('should omit empty objects.', function() {
-    omitEmpty({a: {b: {c: 'foo'}, d: {}}}).should.eql({a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo'}, d: {}}}), {a: {b: {c: 'foo'}}});
   });
 
   it('should omit empty objects.', function() {
-    omitEmpty({a: undefined}).should.eql({});
+    assert.deepEqual(omitEmpty({a: undefined}), {});
   });
 
-  it('should omit empty objects.', function() {
-    omitEmpty({a: {b: undefined}}).should.eql({});
+  it('should omit nested empty objects.', function() {
+    assert.deepEqual(omitEmpty({a: {b: undefined}}), {});
+  });
+
+  it('should not omit functions', function() {
+    var fn = function(a, b, c) {};
+    assert.deepEqual(omitEmpty({a: fn}), {a: fn});
+  });
+
+  it('should not omit functions with no length', function() {
+    var fn = function() {};
+    assert.deepEqual(omitEmpty({a: fn}), {a: fn});
   });
 
   it('should omit empty primatives.', function() {
-    omitEmpty({a: {b: {c: 'foo'}, d: ''}}).should.eql({a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo'}, d: ''}}), {a: {b: {c: 'foo'}}});
   });
 
   it('should omit empty arrays.', function() {
-    omitEmpty({a: {b: {c: 'foo', d: []}, foo: []}}).should.eql({a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: []}, foo: []}}), {a: {b: {c: 'foo'}}});
   });
 
   it('should not omit `0`.', function() {
-    omitEmpty({a: {b: {c: 'foo', d: 0}, foo: []}}).should.eql({a: {b: {c: 'foo', d: 0}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: 0}, foo: []}}), {a: {b: {c: 'foo', d: 0}}});
   });
 
   it('should omit `0` when `noZero` is defined.', function() {
-    omitEmpty({a: {b: {c: 'foo', d: 0}, foo: []}}, true).should.eql({a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: 0}, foo: []}}, true), {a: {b: {c: 'foo'}}});
   });
 
   it('should not omit `false`.', function() {
-    omitEmpty({a: {b: {c: 'foo', d: 0}, foo: [], bar: false}}).should.eql({a: {b: {c: 'foo', d: 0}, bar: false}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: 0}, foo: [], bar: false}}), {a: {b: {c: 'foo', d: 0}, bar: false}});
   });
 
   it('should not omit Dates.', function() {
     var today = new Date()
-    omitEmpty({a: {b: {c: 'foo', d: today}, foo: [], bar: false}}).should.eql({a: {b: {c: 'foo', d: today}, bar: false}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: today}, foo: [], bar: false}}), {a: {b: {c: 'foo', d: today}, bar: false}});
   });
 
   it('should handle complex objects.', function() {
     var o = {a: {b: {c: 'foo', d: 0, e: {f: {g: {}, h: {i: 'i'}}}}, foo: [['bar', 'baz'], []], bar: [], one: 1, two: 2, three: 0 } };
-    omitEmpty(o).should.eql({a: {b: {c: 'foo', d: 0, e: {f: {h: {i: 'i'}}}}, foo: [['bar', 'baz'], []], one: 1, two: 2, three: 0}});
+    assert.deepEqual(omitEmpty(o), {a: {b: {c: 'foo', d: 0, e: {f: {h: {i: 'i'}}}}, foo: [['bar', 'baz'], []], one: 1, two: 2, three: 0}});
   });
 });
 
