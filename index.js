@@ -1,7 +1,7 @@
 /*!
  * omit-empty <https://github.com/jonschlinkert/omit-empty>
  *
- * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Copyright (c) 2014-2016, Jon Schlinkert.
  * Licensed under the MIT License.
  */
 
@@ -12,7 +12,7 @@ var reduce = require('reduce-object');
 var hasValues = require('has-values');
 var isObject = require('isobject');
 
-module.exports = function omitEmpty(o, noZero) {
+function omitEmpty(o, noZero) {
   return reduce(o, function(acc, value, key) {
     if (isDateObject(value)) {
       acc[key] = value;
@@ -28,10 +28,7 @@ module.exports = function omitEmpty(o, noZero) {
     }
 
     if (Array.isArray(value)) {
-      value = value.filter(Boolean);
-      if (!value.length) {
-        return acc;
-      }
+      value = emptyArray(value);
     }
 
     if (typeof value === 'function' || hasValues(value, noZero)) {
@@ -40,3 +37,23 @@ module.exports = function omitEmpty(o, noZero) {
     return acc;
   }, {});
 };
+
+function emptyArray(arr) {
+  var len = arr.length;
+  var idx = -1;
+  var res = [];
+  while (++idx < len) {
+    var ele = arr[idx];
+    if (typeof ele === 'undefined' || ele === '' || ele === null) {
+      continue;
+    }
+    res.push(ele);
+  }
+  return res;
+}
+
+/**
+ * Expose `omitEmpty`
+ */
+
+module.exports = omitEmpty;

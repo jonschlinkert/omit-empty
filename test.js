@@ -18,10 +18,14 @@ describe('.omitEmpty()', function() {
 
   it('should omit empty objects.', function() {
     assert.deepEqual(omitEmpty({a: undefined}), {});
+    assert.deepEqual(omitEmpty({a: null}), {});
+    assert.deepEqual(omitEmpty({a: ''}), {});
   });
 
   it('should omit nested empty objects.', function() {
     assert.deepEqual(omitEmpty({a: {b: undefined}}), {});
+    assert.deepEqual(omitEmpty({a: {b: null}}), {});
+    assert.deepEqual(omitEmpty({a: {b: ''}}), {});
   });
 
   it('should not omit functions', function() {
@@ -34,7 +38,7 @@ describe('.omitEmpty()', function() {
     assert.deepEqual(omitEmpty({a: fn}), {a: fn});
   });
 
-  it('should omit empty primatives.', function() {
+  it('should omit empty primitives.', function() {
     assert.deepEqual(omitEmpty({a: {b: {c: 'foo'}, d: ''}}), {a: {b: {c: 'foo'}}});
   });
 
@@ -42,6 +46,7 @@ describe('.omitEmpty()', function() {
     assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: []}, foo: []}}), {a: {b: {c: 'foo'}}});
     assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: [undefined]}, foo: [null]}}), {a: {b: {c: 'foo'}}});
     assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: ['']}, foo: [null]}}), {a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {z: [''], b: {c: 'foo', d: ['']}, foo: [null]}}), {a: {b: {c: 'foo'}}});
   });
 
   it('should not omit `0`.', function() {
