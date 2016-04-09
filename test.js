@@ -40,6 +40,8 @@ describe('.omitEmpty()', function() {
 
   it('should omit empty arrays.', function() {
     assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: []}, foo: []}}), {a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: [undefined]}, foo: [null]}}), {a: {b: {c: 'foo'}}});
+    assert.deepEqual(omitEmpty({a: {b: {c: 'foo', d: ['']}, foo: [null]}}), {a: {b: {c: 'foo'}}});
   });
 
   it('should not omit `0`.', function() {

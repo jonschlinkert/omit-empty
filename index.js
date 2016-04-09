@@ -27,6 +27,13 @@ module.exports = function omitEmpty(o, noZero) {
       return acc;
     }
 
+    if (Array.isArray(value)) {
+      value = value.filter(Boolean);
+      if (!value.length) {
+        return acc;
+      }
+    }
+
     if (typeof value === 'function' || hasValues(value, noZero)) {
       acc[key] = value;
     }
