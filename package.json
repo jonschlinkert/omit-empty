@@ -1,7 +1,7 @@
 {
   "name": "omit-empty",
   "description": "Recursively omit empty properties from an object. Omits empty objects, arrays, strings or zero.",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "homepage": "https://github.com/jonschlinkert/omit-empty",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/omit-empty",
@@ -64,14 +64,9 @@
     ],
     "related": {
       "list": [
-        "flatten-object",
         "for-in",
         "for-own",
         "is-plain-object",
-        "mixin-deep",
-        "mixin-object",
-        "object-length",
-        "omit-empty",
         "reduce-object"
       ]
     },
