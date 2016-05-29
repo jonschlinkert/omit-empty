@@ -28,7 +28,7 @@ function omitEmpty(o, noZero) {
     }
 
     if (Array.isArray(value)) {
-      value = emptyArray(value);
+      value = emptyArray(value, noZero);
     }
 
     if (typeof value === 'function' || hasValues(value, noZero)) {
@@ -38,7 +38,7 @@ function omitEmpty(o, noZero) {
   }, {});
 };
 
-function emptyArray(arr) {
+function emptyArray(arr, noZero) {
   var len = arr.length;
   var idx = -1;
   var res = [];
@@ -47,7 +47,18 @@ function emptyArray(arr) {
     if (typeof ele === 'undefined' || ele === '' || ele === null) {
       continue;
     }
-    res.push(ele);
+    if (isDateObject(ele)) {
+      res.push(ele);
+    }
+    if(isObject(ele)){
+      ele = omitEmpty(ele, noZero);
+    }
+    if (Array.isArray(ele)) {
+      ele = emptyArray(ele, noZero);
+    }
+    if (typeof ele === 'function' || hasValues(ele, noZero)) {
+      res.push(ele);
+    }
   }
   return res;
 }
