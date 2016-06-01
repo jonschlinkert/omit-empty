@@ -7,20 +7,37 @@
 
 'use strict';
 
-var isDateObject = require('is-date-object');
-var reduce = require('reduce-object');
+var typeOf = require('kind-of');
 var hasValues = require('has-values');
-var isObject = require('isobject');
+var reduce = require('reduce-object');
 
-function omitEmpty(o, noZero) {
+function omitEmpty(o, options) {
+  if (typeof options === 'boolean') {
+    options = { noZero: options };
+  }
+
+  options = options || {};
+  var excludeType = arrayify(options.excludeType);
+  var exclude = arrayify(options.exclude);
+
   return reduce(o, function(acc, value, key) {
-    if (isDateObject(value)) {
+    if (exclude.indexOf(key) !== -1) {
       acc[key] = value;
       return acc;
     }
 
-    if (isObject(value)) {
-      var val = omitEmpty(value, noZero);
+    if (excludeType.indexOf(typeOf(value)) !== -1) {
+      acc[key] = value;
+      return acc;
+    }
+
+    if (typeOf(value) === 'date') {
+      acc[key] = value;
+      return acc;
+    }
+
+    if (typeOf(value) === 'object') {
+      var val = omitEmpty(value, options);
       if (hasValues(val)) {
         acc[key] = val;
       }
@@ -28,17 +45,21 @@ function omitEmpty(o, noZero) {
     }
 
     if (Array.isArray(value)) {
-      value = emptyArray(value, noZero);
+      value = emptyArray(value, options);
     }
 
-    if (typeof value === 'function' || hasValues(value, noZero)) {
+    if (typeof value === 'function' || hasValues(value, options.noZero)) {
       acc[key] = value;
     }
     return acc;
   }, {});
 };
 
-function emptyArray(arr, noZero) {
+/**
+ * Omit empty array values
+ */
+
+function emptyArray(arr, options) {
   var len = arr.length;
   var idx = -1;
   var res = [];
@@ -47,20 +68,28 @@ function emptyArray(arr, noZero) {
     if (typeof ele === 'undefined' || ele === '' || ele === null) {
       continue;
     }
-    if (isDateObject(ele)) {
+    if (typeOf(ele) === 'date') {
       res.push(ele);
     }
-    if(isObject(ele)){
-      ele = omitEmpty(ele, noZero);
+    if (typeOf(ele) === 'object') {
+      ele = omitEmpty(ele, options);
     }
     if (Array.isArray(ele)) {
-      ele = emptyArray(ele, noZero);
+      ele = emptyArray(ele, options);
     }
-    if (typeof ele === 'function' || hasValues(ele, noZero)) {
+    if (typeof ele === 'function' || hasValues(ele, options.noZero)) {
       res.push(ele);
     }
   }
   return res;
+}
+
+/**
+ * Cast `val` to an array
+ */
+
+function arrayify(val) {
+  return val ? (Array.isArray(val) ? val : [val]) : [];
 }
 
 /**

@@ -8,10 +8,11 @@
 'use strict';
 
 require('mocha');
+var typeOf = require('kind-of');
 var assert = require('assert');
 var omitEmpty = require('./');
 
-describe('.omitEmpty()', function() {
+describe('omit-empty', function() {
   it('should omit empty objects.', function() {
     assert.deepEqual(omitEmpty({a: {b: {c: 'foo'}, d: {}}}), {a: {b: {c: 'foo'}}});
   });
@@ -22,10 +23,40 @@ describe('.omitEmpty()', function() {
     assert.deepEqual(omitEmpty({a: ''}), {});
   });
 
+  it('should not omit empty objects defined on `options.exclude`', function() {
+    assert.deepEqual(omitEmpty({a: undefined}, {exclude: 'a'}), {a: undefined});
+    assert.deepEqual(omitEmpty({a: null}, {exclude: ['a']}), {a: null});
+    assert.deepEqual(omitEmpty({a: ''}, {exclude: ['a']}), {a: ''});
+  });
+
+  it('should not omit empty objects defined on `options.excludeType`', function() {
+    assert.deepEqual(omitEmpty({a: undefined}, {excludeType: 'undefined'}), {a: undefined});
+    assert.deepEqual(omitEmpty({a: null}, {excludeType: ['null']}), {a: null});
+    assert.deepEqual(omitEmpty({a: ''}, {excludeType: ['string']}), {a: ''});
+  });
+
   it('should omit nested empty objects.', function() {
     assert.deepEqual(omitEmpty({a: {b: undefined}}), {});
     assert.deepEqual(omitEmpty({a: {b: null}}), {});
     assert.deepEqual(omitEmpty({a: {b: ''}}), {});
+  });
+
+  it('should not omit nested empty objects defined on `options.exclude`', function() {
+    assert.deepEqual(omitEmpty({a: {b: undefined}}, {exclude: 'b'}), {a: {b: undefined}});
+    assert.deepEqual(omitEmpty({a: {b: null}}, {exclude: ['b']}), {a: {b: null}});
+    assert.deepEqual(omitEmpty({a: {b: ''}}, {exclude: ['b']}), {a: {b: ''}});
+  });
+
+  it('should not omit nested empty objects with parent defined on `options.exclude`', function() {
+    assert.deepEqual(omitEmpty({a: {b: undefined}}, {exclude: 'a'}), {a: {b: undefined}});
+    assert.deepEqual(omitEmpty({a: {b: null}}, {exclude: ['a']}), {a: {b: null}});
+    assert.deepEqual(omitEmpty({a: {b: ''}}, {exclude: ['a']}), {a: {b: ''}});
+  });
+
+  it('should not omit nested empty objects defined on `options.excludeType`', function() {
+    assert.deepEqual(omitEmpty({a: {b: undefined}}, {excludeType: 'undefined'}), {a: {b: undefined}});
+    assert.deepEqual(omitEmpty({a: {b: null}}, {excludeType: ['null']}), {a: {b: null}});
+    assert.deepEqual(omitEmpty({a: {b: ''}}, {excludeType: ['string']}), {a: {b: ''}});
   });
 
   it('should not omit functions', function() {
@@ -69,6 +100,11 @@ describe('.omitEmpty()', function() {
   it('should handle complex objects.', function() {
     var o = {a: {b: {c: 'foo', d: 0, e: {f: {g: {}, h: {i: 'i'}}}}, foo: [['bar', 'baz'], []], bar: [], one: 1, two: 2, three: 0 } };
     assert.deepEqual(omitEmpty(o), {a: {b: {c: 'foo', d: 0, e: {f: {h: {i: 'i'}}}}, foo: [['bar', 'baz']], one: 1, two: 2, three: 0}});
+  });
+
+  it('should handle complex objects with excluded keys.', function() {
+    var o = {a: {b: {c: 'foo', d: 0, e: {f: {g: {}, h: {i: 'i'}}}}, foo: [['bar', 'baz'], []], bar: [], one: 1, two: 2, three: 0 } };
+    assert.deepEqual(omitEmpty(o, {exclude: 'foo'}), {a: {b: {c: 'foo', d: 0, e: {f: {h: {i: 'i'}}}}, foo: [['bar', 'baz'], []], one: 1, two: 2, three: 0}});
   });
 });
 
