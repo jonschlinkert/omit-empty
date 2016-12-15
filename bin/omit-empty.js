@@ -13,4 +13,4 @@ if (!file){
 
 var updatedContents = omitEmpty(JSON.parse(fs.readFileSync(file)));
 
-console.log(contents)
+console.log(JSON.stringify(updatedContents))
