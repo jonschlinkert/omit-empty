@@ -4,7 +4,13 @@
   "version": "0.4.1",
   "homepage": "https://github.com/jonschlinkert/omit-empty",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
-  "repository": "jonschlinkert/omit-empty",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonschlinkert/omit-empty.git"
+  },
+  "bin": {
+    "omit-empty": "bin/omit-empty.js"
+  },
   "bugs": {
     "url": "https://github.com/jonschlinkert/omit-empty/issues"
   },
