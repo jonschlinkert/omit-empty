@@ -1,95 +1,77 @@
-/*!
- * omit-empty <https://github.com/jonschlinkert/omit-empty>
- *
- * Copyright (c) 2014-2016, Jon Schlinkert.
- * Licensed under the MIT License.
- */
-
 'use strict';
 
-var typeOf = require('kind-of');
-var hasValues = require('has-values');
-var reduce = require('reduce-object');
+const typeOf = require('kind-of');
 
-function omitEmpty(o, options) {
-  if (typeof options === 'boolean') {
-    options = { noZero: options };
-  }
+const omitEmpty = (obj, options) => {
+  let omitZero = options ? options.omitZero : false;
 
-  options = options || {};
-  var excludeType = arrayify(options.excludeType);
-  var exclude = arrayify(options.exclude);
-
-  return reduce(o, function(acc, value, key) {
-    if (exclude.indexOf(key) !== -1) {
-      acc[key] = value;
-      return acc;
-    }
-
-    if (excludeType.indexOf(typeOf(value)) !== -1) {
-      acc[key] = value;
-      return acc;
-    }
-
-    if (typeOf(value) === 'date') {
-      acc[key] = value;
-      return acc;
+  let omit = value => {
+    if (Array.isArray(value)) {
+      value = value.map(v => omit(v)).filter(v => !isEmpty(v, omitZero));
     }
 
     if (typeOf(value) === 'object') {
-      var val = omitEmpty(value, options);
-      if (hasValues(val)) {
-        acc[key] = val;
+      let result = {};
+      for (let key of Object.keys(value)) {
+        let val = omit(value[key]);
+        if (val !== void 0) {
+          result[key] = val;
+        }
       }
-      return acc;
+      value = result;
     }
 
-    if (Array.isArray(value)) {
-      value = emptyArray(value, options);
+    if (!isEmpty(value, omitZero)) {
+      return value;
     }
+  };
 
-    if (typeof value === 'function' || hasValues(value, options.noZero)) {
-      acc[key] = value;
-    }
-    return acc;
-  }, {});
-};
-
-/**
- * Omit empty array values
- */
-
-function emptyArray(arr, options) {
-  var len = arr.length;
-  var idx = -1;
-  var res = [];
-  while (++idx < len) {
-    var ele = arr[idx];
-    if (typeof ele === 'undefined' || ele === '' || ele === null) {
-      continue;
-    }
-    if (typeOf(ele) === 'date') {
-      res.push(ele);
-    }
-    if (typeOf(ele) === 'object') {
-      ele = omitEmpty(ele, options);
-    }
-    if (Array.isArray(ele)) {
-      ele = emptyArray(ele, options);
-    }
-    if (typeof ele === 'function' || hasValues(ele, options.noZero)) {
-      res.push(ele);
-    }
+  let res = omit(obj);
+  if (res === void 0) {
+    return typeOf(obj) === 'object' ? {} : res;
   }
   return res;
-}
+};
 
-/**
- * Cast `val` to an array
- */
-
-function arrayify(val) {
-  return val ? (Array.isArray(val) ? val : [val]) : [];
+function isEmpty(value, omitZero) {
+  switch (typeOf(value)) {
+    case 'null':
+    case 'undefined':
+      return true;
+    case 'boolean':
+    case 'function':
+    case 'date':
+    case 'regexp':
+      return false;
+    case 'string':
+    case 'arguments':
+      return value.length === 0;
+    case 'file':
+    case 'map':
+    case 'set':
+      return value.size === 0;
+    case 'number':
+      return omitZero ? value === 0 : false;
+    case 'error':
+      return value.message === '';
+    case 'array':
+      for (let ele of value) {
+        if (!isEmpty(ele, omitZero)) {
+          return false;
+        }
+      }
+      return true;
+    case 'object':
+      for (let key of Object.keys(value)) {
+        if (!isEmpty(value[key], omitZero)) {
+          return false;
+        }
+      }
+      return true;
+    default: {
+      return true;
+    }
+  }
 }
 
 /**
