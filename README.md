@@ -33,10 +33,24 @@ console.log(omitEmpty({ a: ['a'], b: [] }));
 console.log(omitEmpty({ a: 0, b: 1 }));
 //=> { a: 0, b: 1 }
 
+## Options
+When calling `omitEmpty`, you can pass options to control behavior:
+
+| Option key | default | description |
+|---|---|---|
+|omitZero|false| When set to `true` causes any properties with a value of 0 to be removed|
+|omitEmptyArray|true| When set to `false` empty arrays will be preserved|
+|excludeProperties| | Specify a list of string properties that will be skipped. If the property is an object, then the value will not be recursed (meaning, omit-empty is not run on the nested object.|
+
+Examples:
+
+```js
 // set omitZero to true, to evaluate "0" as falsey
 console.log(omitEmpty({ a: 0, b: 1 }, { omitZero: true }));
 //=> { b: 1 }
 ```
+
+
 
 ## About
 
