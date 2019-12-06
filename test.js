@@ -152,4 +152,28 @@ describe('omit-empty', () => {
       }
     });
   });
+
+  it('should omit deeply nested values with Config options', () => {
+    let o = {
+      a: {
+        b: { c: 'foo', d: 0, e: { f: { g: {}, h: { i: 'i' } } } },
+        foo: [['bar', 'baz'], []],
+        bar: [],
+        one: 1,
+        two: 2,
+        three: 0
+      }
+    };
+
+    assert.deepEqual(omitEmpty(o, { omitEmptyArray: false, omitZero: true, excludeProperties: ['three'] }), {
+      a: {
+        b: { c: 'foo', e: { f: { h: { i: 'i' } } } },
+        foo: [['bar', 'baz'], []],
+        bar: [],
+        one: 1,
+        two: 2,
+        three: 0
+      }
+    });
+  });
 });

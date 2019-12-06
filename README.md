@@ -40,7 +40,7 @@ When calling `omitEmpty`, you can pass options to control behavior:
 |---|---|---|
 |omitZero|false| When set to `true` causes any properties with a value of 0 to be removed|
 |omitEmptyArray|true| When set to `false` empty arrays will be preserved|
-|excludeProperties| | Specify a list of string properties that will be ignored. Currently this does NOT support dot-notation paths. Any property name will match at all levels.|
+|excludeProperties| | Specify a list of string properties that will be skipped. If the property is an object, then the value will not be recursed (meaning, omit-empty is not run on the nested object.|
 
 Examples:
 

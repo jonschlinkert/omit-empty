@@ -13,7 +13,9 @@ const omitEmpty = (obj, options = {}) => {
     if (typeOf(value) === 'object') {
       let result = {};
       for (let key of Object.keys(value)) {
-        if (!opts.excludedProperties.includes(key)) {
+        if (opts.excludeProperties.includes(key)) {
+          result[key] = value[key];
+        } else {
           let val = omit(value[key], opts);
           if (val !== void 0) {
             result[key] = val;
@@ -38,8 +40,8 @@ const omitEmpty = (obj, options = {}) => {
 function _buildRuntimeOpts(options = {}) {
   return {
     omitZero: options.omitZero || false,
-    omitEmptyArray: options.omitEmptyArray || true,
-    excludedProperties: options.excludedProperties || []
+    omitEmptyArray: options.omitEmptyArray === false ? false : true,
+    excludeProperties: options.excludeProperties || []
   };
 };
 
