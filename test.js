@@ -25,6 +25,11 @@ describe('omit-empty', () => {
     assert.deepEqual(omitEmpty(['foo']), ['foo']);
   });
 
+  it('should return empty arrays with option config', () => {
+    assert.deepEqual(omitEmpty(['foo'], { omitEmptyArray: false }), ['foo']);
+  });
+
+
   it('should return undefined when the value is an empty string', () => {
     assert.equal(omitEmpty(''), void 0);
   });
@@ -60,9 +65,9 @@ describe('omit-empty', () => {
   });
 
   it('should omit nested empty objects.', () => {
-    assert.deepEqual(omitEmpty({ a: { b: undefined, c: 'd' } }), { a: { c: 'd' }});
-    assert.deepEqual(omitEmpty({ a: { b: null, c: 'd' } }), { a: { c: 'd' }});
-    assert.deepEqual(omitEmpty({ a: { b: '', c: 'd' } }), { a: { c: 'd' }});
+    assert.deepEqual(omitEmpty({ a: { b: undefined, c: 'd' } }), { a: { c: 'd' } });
+    assert.deepEqual(omitEmpty({ a: { b: null, c: 'd' } }), { a: { c: 'd' } });
+    assert.deepEqual(omitEmpty({ a: { b: '', c: 'd' } }), { a: { c: 'd' } });
   });
 
   it('should deeply omit nested empty objects.', () => {
@@ -72,8 +77,8 @@ describe('omit-empty', () => {
   });
 
   it('should not omit functions', () => {
-    let fn = (a, b, c) => {};
-    let fn2 = () => {};
+    let fn = (a, b, c) => { };
+    let fn2 = () => { };
     assert.deepEqual(omitEmpty({ a: fn, b: fn2 }), { a: fn, b: fn2 });
   });
 

@@ -2,38 +2,48 @@
 
 const typeOf = require('kind-of');
 
-const omitEmpty = (obj, options) => {
-  let omitZero = options ? options.omitZero : false;
+const omitEmpty = (obj, options = {}) => {
+  const runtimeOpts = _buildRuntimeOpts(options);
 
-  let omit = value => {
+  let omit = (value, opts) => {
     if (Array.isArray(value)) {
-      value = value.map(v => omit(v)).filter(v => !isEmpty(v, omitZero));
+      value = value.map(v => omit(v, opts)).filter(v => !isEmpty(v, opts));
     }
 
     if (typeOf(value) === 'object') {
       let result = {};
       for (let key of Object.keys(value)) {
-        let val = omit(value[key]);
-        if (val !== void 0) {
-          result[key] = val;
+        if (!opts.excludedProperties.includes(key)) {
+          let val = omit(value[key], opts);
+          if (val !== void 0) {
+            result[key] = val;
+          }
         }
       }
       value = result;
     }
 
-    if (!isEmpty(value, omitZero)) {
+    if (!isEmpty(value, opts)) {
       return value;
     }
   };
 
-  let res = omit(obj);
+  let res = omit(obj, runtimeOpts);
   if (res === void 0) {
     return typeOf(obj) === 'object' ? {} : res;
   }
   return res;
 };
 
-function isEmpty(value, omitZero) {
+function _buildRuntimeOpts(options = {}) {
+  return {
+    omitZero: options.omitZero || false,
+    omitEmptyArray: options.omitEmptyArray || true,
+    excludedProperties: options.excludedProperties || []
+  };
+};
+
+function isEmpty(value, runtimeOpts) {
   switch (typeOf(value)) {
     case 'null':
     case 'undefined':
@@ -51,19 +61,23 @@ function isEmpty(value, omitZero) {
     case 'set':
       return value.size === 0;
     case 'number':
-      return omitZero ? value === 0 : false;
+      return runtimeOpts.omitZero ? value === 0 : false;
     case 'error':
       return value.message === '';
     case 'array':
-      for (let ele of value) {
-        if (!isEmpty(ele, omitZero)) {
-          return false;
+      if (runtimeOpts.omitEmptyArray) {
+        for (let ele of value) {
+          if (!isEmpty(ele, runtimeOpts)) {
+            return false;
+          }
         }
+        return true;
+      } else {
+        return false;
       }
-      return true;
     case 'object':
       for (let key of Object.keys(value)) {
-        if (!isEmpty(value[key], omitZero)) {
+        if (!isEmpty(value[key], runtimeOpts)) {
           return false;
         }
       }
